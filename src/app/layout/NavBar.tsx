@@ -1,13 +1,14 @@
+import { observer } from "mobx-react-lite";
 import { Button, Menu } from "semantic-ui-react";
+import { useStore } from "../stores/store";
 import "../styles/NavBar.css";
 
-interface Props {
-  openForm: ()=> void;
-}
+ 
 
-export default function NavBar({openForm}:Props) {
-  return (
-    <Menu inverted fixed="top" >
+function NavBar() {
+  const { activityStore } = useStore();
+   return (
+    <Menu inverted fixed="top">
       <Menu.Item>
         <img
           src={require("../assets/logo.jpg")}
@@ -19,8 +20,9 @@ export default function NavBar({openForm}:Props) {
       <Menu.Item name="reactivities">Reactivities</Menu.Item>
       <Menu.Item name="activities">Activities</Menu.Item>
       <Menu.Item name="createActivity">
-        <Button onClick={openForm} content="Create Activity"></Button>
+        <Button onClick={() => activityStore.openForm()} content="Create Activity"></Button>
       </Menu.Item>
     </Menu>
   );
 }
+export default observer(NavBar);
