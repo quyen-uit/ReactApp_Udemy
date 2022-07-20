@@ -1,15 +1,17 @@
 import { observer } from "mobx-react-lite";
-import React from "react";
+import React, { useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 import { Button, Card, Image } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 
 function ActivityDetail() {
   const { activityStore } = useStore();
-  const {
-    openForm,
-    cancelActivity,
-    selectedActivity: activity,
-  } = activityStore;
+  const { selectedActivity: activity, loadActivity } = activityStore;
+  const { id } = useParams<{ id: string }>();
+
+  useEffect(() => {
+    if (id) loadActivity(id);
+  }, [id, loadActivity]);
   if (activity === undefined) return <div></div>;
   return (
     <Card fluid>
@@ -28,16 +30,18 @@ function ActivityDetail() {
       <Card.Content extra>
         <Button.Group widths={2}>
           <Button
-            onClick={() => openForm(activity.id)}
             basic
             color="blue"
             content="Edit"
+            as={Link}
+            to={`/manage/${activity.id}`}
           />
           <Button
-            onClick={() => cancelActivity()}
             basic
             color="grey"
             content="Cancel"
+            as={Link}
+            to="/activities"
           />
         </Button.Group>
       </Card.Content>

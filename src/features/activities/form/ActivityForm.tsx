@@ -1,13 +1,12 @@
 import { observer } from "mobx-react-lite";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Button, Form, Segment } from "semantic-ui-react";
-import { Activity } from "../../../app/models/Activity";
 import { useStore } from "../../../app/stores/store";
-interface Props {
-  activity: Activity | undefined;
-}
-function ActivityForm({ activity: selectedActivity }: Props) {
-  const initialState = selectedActivity ?? {
+import { v4 as uuid } from "uuid";
+
+function ActivityForm() {
+  const [activity, setActivity] = useState({
     id: "",
     title: "",
     category: "",
@@ -15,22 +14,36 @@ function ActivityForm({ activity: selectedActivity }: Props) {
     date: "",
     city: "",
     venue: "",
-  };
-
-  const [activity, setActivity] = useState(initialState);
+  });
   const { activityStore } = useStore();
-  const { createActivity, editActivity, submitting, closeForm } = activityStore;
+  const { createActivity, editActivity, submitting, loadActivity } =
+    activityStore;
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (id) loadActivity(id).then((act) => setActivity(act!));
+  }, [id, loadActivity]);
 
   function handleSubmit() {
-    if (activity.id) createActivity(activity);
-    else editActivity(activity);
+    if (activity.id.length === 0) {
+      let newActivity = {
+        ...activity,
+        id: uuid(),
+      };
+      createActivity(newActivity).then((act) =>
+        navigate(`/activity/${act.id}`)
+      );
+    } else
+      editActivity(activity).then((act) => navigate(`/activity/${act.id}`));
   }
+
   function handleInputChange(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) {
     const { name, value } = event.target;
     setActivity({ ...activity, [name]: value });
   }
+
   return (
     <Segment clearing>
       <Form onSubmit={handleSubmit} autoComplete="off">
@@ -74,11 +87,12 @@ function ActivityForm({ activity: selectedActivity }: Props) {
         />
         <Button floated="right" positive type="submit" content="Submit" />
         <Button
-          onClick={() => closeForm()}
           floated="right"
           positive
           type="button"
           content="Cancel"
+          as={Link}
+          to="/activities"
         />
       </Form>
     </Segment>

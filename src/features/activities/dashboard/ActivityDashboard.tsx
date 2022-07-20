@@ -1,10 +1,10 @@
 import { observer } from "mobx-react-lite";
 import { Grid } from "semantic-ui-react";
 import { Activity } from "../../../app/models/Activity";
-import { useStore } from "../../../app/stores/store";
+// import { useStore } from "../../../app/stores/store";
 import ActivityList from "../dashboard/ActivityList";
-import ActivityDetail from "../detail/ActivityDetail";
-import ActivityForm from "../form/ActivityForm";
+// import ActivityDetail from "../detail/ActivityDetail";
+// import ActivityForm from "../form/ActivityForm";
 interface Props {
   activities: Activity[];
 }
@@ -12,16 +12,16 @@ interface Props {
   activities
 }: Props) {
 
-  const {activityStore}=useStore();
-  const {selectedActivity,editMode} = activityStore;
+  // const {activityStore}=useStore();
+  // const {selectedActivity,editMode} = activityStore;
   return (
     <Grid>
-      <Grid.Column width="10">
+      <Grid.Column width="16">
         <ActivityList
           activities={activities}
         />
       </Grid.Column>
-      <Grid.Column width={6}>
+      {/* <Grid.Column width={6}>
         {selectedActivity !== undefined && !editMode ? (
           <ActivityDetail
            />
@@ -31,7 +31,7 @@ interface Props {
             activity={selectedActivity}
           />
         ) : null}
-      </Grid.Column>
+      </Grid.Column> */}
     </Grid>
   );
 }
