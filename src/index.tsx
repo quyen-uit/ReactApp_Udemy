@@ -5,15 +5,20 @@ import App from "./app/layout/App";
 import reportWebVitals from "./reportWebVitals";
 import "semantic-ui-css/semantic.min.css";
 import { store, StoreContext } from "./app/stores/store";
-import { BrowserRouter } from "react-router-dom";
+import { unstable_HistoryRouter as HistoryRouter   } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+import { createBrowserHistory } from "history";
+
+export const history = createBrowserHistory();
+
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <StoreContext.Provider value={store}>
-    <BrowserRouter>
+    <HistoryRouter history={history}>
       <App />
-    </BrowserRouter>
+    </HistoryRouter>
   </StoreContext.Provider>
 );
 

@@ -94,6 +94,7 @@ export default class ActivityStore {
     setSubmitting = (submitting: boolean) => {
         this.submitting = submitting;
     }
+
     editActivity = async (activity: Activity) => {
         this.submitting = true;
         try {
@@ -113,6 +114,7 @@ export default class ActivityStore {
         });
         return activity;
     }
+    
     createActivity = async (activity: Activity) => {
         this.submitting = true;
 

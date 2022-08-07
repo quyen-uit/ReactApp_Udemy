@@ -1,6 +1,8 @@
+import { store } from './../stores/store';
 import { Activity } from './../models/Activity';
-import axios, { AxiosResponse } from 'axios';
-
+import axios, { AxiosError, AxiosResponse } from 'axios';
+import { toast } from 'react-toastify';
+import { history } from '../../index';
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
         setTimeout(resolve, delay)
@@ -9,11 +11,41 @@ const sleep = (delay: number) => {
 axios.defaults.baseURL = 'https://localhost:7180/api';
 
 axios.interceptors.response.use(async response => {
-    try {
-         return response;
-    } catch (err) {
-        console.log(err);
-        return await Promise.reject(err);
+    await sleep(1000);
+    return response;
+}, error => {
+    const { data, status, config } = error.response!;
+    switch (status) {
+        case 400:
+            if (typeof data == 'string') {
+                toast.error(data);
+            }
+            if (config.method == 'get' && data.errors.hasOwnProperty('id')) {
+                history.push('/notfound');
+            }
+            if (data.errors) {
+                const listErrors: any[] = [];
+                for (const item in data.errors) {
+                    if (data.errors[item]) {
+                        listErrors.push(data.errors[item]);
+                    }
+                }
+                throw listErrors.flat();
+            }
+
+            break;
+        case 401:
+            toast.error('unauthorize');
+            break;
+        case 404:
+            history.push('/notfound');
+            break;
+        case 500:
+            store.commonStore.setServerError(data);
+            history.push('/server-error');
+
+            toast.error('server error');
+            break;
     }
 })
 
@@ -29,8 +61,8 @@ const requests = {
 const Activities = {
     list: () => requests.get<Activity[]>('/activity'),
     details: (id: string) => requests.get<Activity>(`/activity/${id}`),
-    create: (activity: Activity) => requests.post<void>('/activity',activity),
-    update: (activity: Activity) => requests.put<void>(`/activity/${activity.id}`,activity),
+    create: (activity: Activity) => requests.post<void>('/activity', activity),
+    update: (activity: Activity) => requests.put<void>(`/activity/${activity.id}`, activity),
     delete: (id: string) => requests.delete<void>(`/activity/${id}`),
 
 }

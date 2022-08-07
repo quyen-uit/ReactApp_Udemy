@@ -1,0 +1,12 @@
+.box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+}
+.box__item {
+  font-size: x-large;
+  font-weight: bold;
+  margin: 10px 0px 10px 0px;
+}
