@@ -3,12 +3,24 @@ import { Activity } from './../models/Activity';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
 import { history } from '../../index';
+import { request } from 'http';
+import { User } from '../models/User';
+import { UserFormValues } from '../models/UserFormValues';
+
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
         setTimeout(resolve, delay)
     })
 }
 axios.defaults.baseURL = 'https://localhost:7180/api';
+
+axios.interceptors.request.use(config => {
+    const token = store.commonStore.token;
+    if (token) {
+        config.headers!.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
 
 axios.interceptors.response.use(async response => {
     await sleep(1000);
@@ -20,7 +32,7 @@ axios.interceptors.response.use(async response => {
             if (typeof data == 'string') {
                 toast.error(data);
             }
-            if (config.method == 'get' && data.errors.hasOwnProperty('id')) {
+            if (config.method === 'get' && data.errors.hasOwnProperty('id')) {
                 history.push('/notfound');
             }
             if (data.errors) {
@@ -67,7 +79,14 @@ const Activities = {
 
 }
 
+const Account = {
+    current: () => requests.get<User>('/account'),
+    login: (user: UserFormValues) => requests.post<User>('/account/login', user),
+    register: (user: UserFormValues) => requests.post<User>('/account/register', user)
+}
+
 const agent = {
-    Activities
+    Activities,
+    Account
 }
 export default agent;

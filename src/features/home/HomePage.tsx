@@ -1,14 +1,31 @@
+import { observer } from "mobx-react-lite";
 import React from "react";
 import { Link } from "react-router-dom";
-import { Container } from "semantic-ui-react";
+import { Button, Container } from "semantic-ui-react";
+import { useStore } from "../../app/stores/store";
+import LoginForm from "../users/LoginForm";
+import RegisterForm from "../users/RegisterForm";
 
-export default function HomePage() {
+function HomePage() {
+  const { userStore, modalStore } = useStore();
   return (
     <Container>
       <h1>home page</h1>
-      <h3>
-        go to <Link to="/activities">Activities</Link>
-      </h3>
+      {userStore.isLoggedIn ? (
+        <h3>
+          go to <Link to="/activities">Activities</Link>
+        </h3>
+      ) : (
+        <>
+          <Button onClick={() => modalStore.openModal(<LoginForm />)}>
+            Login
+          </Button>
+          <Button onClick={() => modalStore.openModal(<RegisterForm />)}>
+            Register
+          </Button>
+        </>
+      )}
     </Container>
   );
 }
+export default observer(HomePage);

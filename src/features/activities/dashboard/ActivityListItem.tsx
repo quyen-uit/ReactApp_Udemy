@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import React, { SyntheticEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Icon, Item, Label, Segment } from "semantic-ui-react";
@@ -21,9 +22,13 @@ export default function ActivityListItem({ activity }: Props) {
   return (
     <Segment.Group>
       <Segment>
-        <Item.Group style={{display: 'flex'}}>
-          <Item.Image size="tiny" circular src={require('../../../app/assets/user.png')} />
-          <Item.Content style={{marginLeft:'10px'}}>
+        <Item.Group style={{ display: "flex" }}>
+          <Item.Image
+            size="tiny"
+            circular
+            src={require("../../../app/assets/user.png")}
+          />
+          <Item.Content style={{ marginLeft: "10px" }}>
             <Item.Header as={Link} to={`/activities/${activity.id}`}>
               {activity.title}
             </Item.Header>
@@ -33,7 +38,7 @@ export default function ActivityListItem({ activity }: Props) {
       </Segment>
       <Segment>
         <span>
-          <Icon name="clock" /> {activity.date}
+          <Icon name="clock" /> {format(activity.date!, "dd MMM yyyy h:mm aa")}
           <Icon name="marker" /> {activity.venue}
         </span>
       </Segment>
@@ -45,7 +50,7 @@ export default function ActivityListItem({ activity }: Props) {
           to={`/activity/${activity.id}`}
           color="teal"
           floated="right"
-          content='View'
+          content="View"
         />
       </Segment>
     </Segment.Group>
