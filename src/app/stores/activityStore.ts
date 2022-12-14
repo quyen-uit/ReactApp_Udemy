@@ -4,7 +4,7 @@ import agent from "../api/agent";
 import { Activity } from "../models/Activity"; import { format } from "date-fns";
 import { store } from "./store";
 import { Profile } from "../models/Profile";
-import { history } from '../../index';
+import { router } from '../router/Routes';
 
 export default class ActivityStore {
     // activities: Activity[] = [];
@@ -99,7 +99,7 @@ export default class ActivityStore {
                     this.selectedActivity = undefined;
                     this.setSubmitting(false);
                 })
-                history.push('/activities');
+                router.navigate('/activities');
             });
         } catch (err) {
             console.log(err);

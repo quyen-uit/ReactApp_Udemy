@@ -1,15 +1,23 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { Container } from "semantic-ui-react";
+import HomePage from "../../features/home/HomePage";
 import NavBar from "./NavBar";
 
 export default function Layout() {
+  const location = useLocation();
   return (
     <>
-      <NavBar />
-      <Container style={{ marginTop: "80px" }}>
-        <Outlet />
-      </Container>
+      {location.pathname === "/" ? (
+        <HomePage />
+      ) : (
+        <>
+          <NavBar />
+          <Container style={{ marginTop: "80px" }}>
+            <Outlet />
+          </Container>
+        </>
+      )}
     </>
   );
 }

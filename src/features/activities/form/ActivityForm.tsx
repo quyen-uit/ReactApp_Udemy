@@ -88,6 +88,7 @@ function ActivityForm() {
               positive
               type="submit"
               content="Submit"
+              loading={isSubmitting}
             />
             <Button
               floated="right"

@@ -1,24 +1,25 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./app/styles/styles.css";
-import App from "./app/layout/App";
 import reportWebVitals from "./reportWebVitals";
 import "semantic-ui-css/semantic.min.css";
 import { store, StoreContext } from "./app/stores/store";
-import { unstable_HistoryRouter as HistoryRouter   } from "react-router-dom";
+import { RouterProvider, unstable_HistoryRouter as HistoryRouter   } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import { createBrowserHistory } from "history";
+// import { createBrowserHistory } from "history";
+import { router } from "./app/router/Routes";
 
-export const history = createBrowserHistory();
+// export const history = createBrowserHistory();
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <StoreContext.Provider value={store}>
-    <HistoryRouter history={history}>
+    {/* <HistoryRouter history={history}>
       <App />
-    </HistoryRouter>
+    </HistoryRouter> */}
+    <RouterProvider router={router} />
   </StoreContext.Provider>
 );
 

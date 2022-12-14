@@ -2,10 +2,9 @@ import { store } from './../stores/store';
 import { Activity, ActivityFormvalues } from './../models/Activity';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
-import { history } from '../../index';
-import { request } from 'http';
 import { User } from '../models/User';
 import { UserFormValues } from '../models/UserFormValues';
+import { router } from '../router/Routes';
 
 axios.defaults.baseURL = 'https://localhost:7180/api';
 
@@ -27,7 +26,7 @@ axios.interceptors.response.use(async response => {
                 toast.error(data);
             }
             if (config.method === 'get' && data.errors.hasOwnProperty('id')) {
-                history.push('/notfound');
+                router.navigate('/notfound');
             }
             if (data.errors) {
                 const listErrors: any[] = [];
@@ -44,11 +43,11 @@ axios.interceptors.response.use(async response => {
             toast.error('unauthorize');
             break;
         case 404:
-            history.push('/notfound');
+            router.navigate('/notfound');
             break;
         case 500:
             store.commonStore.setServerError(data);
-            history.push('/server-error');
+            router.navigate('/server-error');
 
             toast.error('server error');
             break;

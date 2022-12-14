@@ -28,7 +28,7 @@ function ActivityListItem({ activity }: Props) {
           <Item.Image
             size="tiny"
             circular
-            src={require("../../../app/assets/user.png")}
+            src={activity.host?.image}
           />
           <Item.Content style={{ marginLeft: "10px" }}>
             <Item.Header as={Link} to={`/activity/${activity.id}`}>
