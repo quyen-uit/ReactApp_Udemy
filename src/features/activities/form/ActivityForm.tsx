@@ -5,7 +5,7 @@ import { Button, FormField, Header, Label, Segment } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import { v4 as uuid } from "uuid";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { Activity } from "../../../app/models/Activity";
+import { Activity, ActivityFormvalues } from "../../../app/models/Activity";
 import * as Yup from "yup";
 import MyTextInput from "../../../app/common/forms/MyTextInput";
 import MyTextAreaInput from "../../../app/common/forms/MyTextAreaInput";
@@ -13,20 +13,13 @@ import MySelectInput from "../../../app/common/forms/MySelectInput";
 import { categoryOptions } from "../../../app/common/options/categoryOption";
 import MyDateInput from "../../../app/common/forms/MyDateInput";
 function ActivityForm() {
-  const [activity, setActivity] = useState<Activity>({
-    id: "",
-    title: "",
-    category: "",
-    description: "",
-    date: null,
-    city: "",
-    venue: "",
-  });
+  const [activity, setActivity] = useState<ActivityFormvalues>(
+    new ActivityFormvalues()
+  );
   const { activityStore } = useStore();
   const { createActivity, editActivity, submitting, loadActivity } =
     activityStore;
 
-  const initialValues: Activity = activity;
   const validationSchema = Yup.object({
     title: Yup.string().required("Title required"),
     description: Yup.string().required("description required"),
@@ -39,11 +32,12 @@ function ActivityForm() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   useEffect(() => {
-    if (id) loadActivity(id).then((act) => setActivity(act!));
+    if (id)
+      loadActivity(id).then((act) => setActivity(new ActivityFormvalues(act)));
   }, [id, loadActivity]);
 
-  function handleFormSubmit(activity: Activity) {
-    if (activity.id.length === 0) {
+  function handleFormSubmit(activity: ActivityFormvalues) {
+    if (!activity.id) {
       let newActivity = {
         ...activity,
         id: uuid(),
@@ -59,7 +53,7 @@ function ActivityForm() {
     <Segment clearing>
       <Header content="Activity Details" sub color="teal" />
       <Formik
-        initialValues={initialValues}
+        initialValues={activity}
         enableReinitialize
         validationSchema={validationSchema}
         onSubmit={(values, actions) => {
@@ -100,6 +94,7 @@ function ActivityForm() {
               positive
               type="button"
               content="Cancel"
+              loading={isSubmitting}
               as={Link}
               to="/activities"
             />

@@ -25,7 +25,7 @@ function ActivityDetail() {
         <ActivityDetailChat />
       </Grid.Column>
       <Grid.Column width={6}>
-        <ActivityDetailSidebar />
+        <ActivityDetailSidebar activity={activity}/>
       </Grid.Column>
     </Grid>
   );

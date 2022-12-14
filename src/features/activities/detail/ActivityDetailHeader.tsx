@@ -1,8 +1,10 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
-import { Button, Header, Item, Segment, Image } from "semantic-ui-react";
+import { Button, Header, Item, Segment, Image, Label } from "semantic-ui-react";
 import { Activity } from "../../../app/models/Activity";
 import { format } from "date-fns";
+import { Link } from "react-router-dom";
+import { useStore } from "../../../app/stores/store";
 
 const activityImageStyle = {
   filter: "brightness(30%)",
@@ -22,9 +24,20 @@ interface Props {
 }
 
 export default observer(function ActivityDetailedHeader({ activity }: Props) {
+  const {
+    activityStore: { updateAttendace, loadingInitial, cancelActivityToggle, deleteActivity },
+  } = useStore();
   return (
     <Segment.Group>
-      <Segment basic attached="top" style={{ padding: "0" }}>
+      <Segment basc attached="top" style={{ padding: "0" }}>
+        {activity.isCancelled && (
+          <Label
+            style={{ position: "absolute", zIndex: 1000, left: -14, top: 20 }}
+            ribbon
+            color="red"
+            content="Cancelled"
+          />
+        )}
         <Image
           src={require("../../../app/assets/categoryImages/music.jpg")}
           fluid
@@ -41,7 +54,25 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
                 />
                 <p>{format(activity.date!, "dd MMM yyyy")}</p>
                 <p>
-                  Hosted by <strong>Bob</strong>
+                  {activity.isHost && (
+                    <Item.Description>
+                      <Label basic color="orange">
+                        You are hosting this activity
+                      </Label>
+                    </Item.Description>
+                  )}
+                  {activity.isGoing && !activity.isHost && (
+                    <Item.Description>
+                      <Label basic color="green">
+                        You are going to this activity
+                      </Label>
+                    </Item.Description>
+                  )}
+                </p>
+                <p>
+                  <Link to={`/profiles/${activity.host?.userName}`}>
+                    Hosted by {activity.host?.displayName}
+                  </Link>
                 </p>
               </Item.Content>
             </Item>
@@ -49,11 +80,52 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
         </Segment>
       </Segment>
       <Segment clearing attached="bottom">
-        <Button color="teal">Join Activity</Button>
-        <Button>Cancel attendance</Button>
-        <Button color="orange" floated="right">
-          Manage Event
-        </Button>
+        {activity.isHost ? (
+          <>
+            <Button
+              floated="left"
+              basic
+              color={activity.isCancelled ? "green" : "red"}
+              content={activity.isCancelled ? "Re-activate" : "Cancel"}
+              onClick={cancelActivityToggle}
+              loading={loadingInitial}
+            />
+            <Button
+              disabled={activity.isCancelled}
+              as={Link}
+              to={`/manage/${activity.id}`}
+              color="orange"
+              floated="right"
+            >
+              Manage Event
+            </Button>
+            <Button
+              onClick={() => deleteActivity(activity.id)}
+              color="red"
+              floated="right"
+              content="Delete"
+            />
+          </>
+        ) : activity.isGoing ? (
+          <Button
+            loading={loadingInitial}
+            onClick={updateAttendace}
+            color="orange"
+            floated="right"
+          >
+            Cancel
+          </Button>
+        ) : (
+          <Button
+            disabled={activity.isCancelled}
+            loading={loadingInitial}
+            onClick={updateAttendace}
+            color="orange"
+            floated="right"
+          >
+            Join activity
+          </Button>
+        )}
       </Segment>
     </Segment.Group>
   );

@@ -1,5 +1,5 @@
 import { store } from './../stores/store';
-import { Activity } from './../models/Activity';
+import { Activity, ActivityFormvalues } from './../models/Activity';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
 import { history } from '../../index';
@@ -7,11 +7,6 @@ import { request } from 'http';
 import { User } from '../models/User';
 import { UserFormValues } from '../models/UserFormValues';
 
-const sleep = (delay: number) => {
-    return new Promise((resolve) => {
-        setTimeout(resolve, delay)
-    })
-}
 axios.defaults.baseURL = 'https://localhost:7180/api';
 
 axios.interceptors.request.use(config => {
@@ -23,8 +18,7 @@ axios.interceptors.request.use(config => {
 });
 
 axios.interceptors.response.use(async response => {
-    await sleep(1000);
-    return response;
+     return response;
 }, error => {
     const { data, status, config } = error.response!;
     switch (status) {
@@ -73,9 +67,10 @@ const requests = {
 const Activities = {
     list: () => requests.get<Activity[]>('/activity'),
     details: (id: string) => requests.get<Activity>(`/activity/${id}`),
-    create: (activity: Activity) => requests.post<void>('/activity', activity),
-    update: (activity: Activity) => requests.put<void>(`/activity/${activity.id}`, activity),
+    create: (activity: ActivityFormvalues) => requests.post<void>('/activity', activity),
+    update: (activity: ActivityFormvalues) => requests.put<void>(`/activity/${activity.id}`, activity),
     delete: (id: string) => requests.delete<void>(`/activity/${id}`),
+    attend: (id: string) => requests.post<void>(`/activity/${id}/attend`,{}),
 
 }
 
