@@ -25,11 +25,16 @@ interface Props {
 
 export default observer(function ActivityDetailedHeader({ activity }: Props) {
   const {
-    activityStore: { updateAttendace, loadingInitial, cancelActivityToggle, deleteActivity },
+    activityStore: {
+      updateAttendace,
+      loadingInitial,
+      cancelActivityToggle,
+      deleteActivity,
+    },
   } = useStore();
   return (
     <Segment.Group>
-      <Segment basc attached="top" style={{ padding: "0" }}>
+      <Segment basic attached="top" style={{ padding: "0" }}>
         {activity.isCancelled && (
           <Label
             style={{ position: "absolute", zIndex: 1000, left: -14, top: 20 }}
@@ -53,27 +58,23 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
                   style={{ color: "white" }}
                 />
                 <p>{format(activity.date!, "dd MMM yyyy")}</p>
-                <p>
-                  {activity.isHost && (
-                    <Item.Description>
-                      <Label basic color="orange">
-                        You are hosting this activity
-                      </Label>
-                    </Item.Description>
-                  )}
-                  {activity.isGoing && !activity.isHost && (
-                    <Item.Description>
-                      <Label basic color="green">
-                        You are going to this activity
-                      </Label>
-                    </Item.Description>
-                  )}
-                </p>
-                <p>
-                  <Link to={`/profiles/${activity.host?.userName}`}>
-                    Hosted by {activity.host?.displayName}
-                  </Link>
-                </p>
+                {activity.isHost && (
+                  <Item.Description>
+                    <Label basic color="orange">
+                      You are hosting this activity
+                    </Label>
+                  </Item.Description>
+                )}
+                {activity.isGoing && !activity.isHost && (
+                  <Item.Description>
+                    <Label basic color="green">
+                      You are going to this activity
+                    </Label>
+                  </Item.Description>
+                )}
+                <Link to={`/profiles/${activity.host?.userName}`}>
+                  Hosted by {activity.host?.displayName}
+                </Link>
               </Item.Content>
             </Item>
           </Item.Group>
@@ -91,7 +92,7 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
               loading={loadingInitial}
             />
             <Button
-              disabled={activity.isCancelled}
+              disabled={!activity.isCancelled}
               as={Link}
               to={`/manage/${activity.id}`}
               color="orange"
@@ -100,6 +101,7 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
               Manage Event
             </Button>
             <Button
+              disabled={!activity.isCancelled}
               onClick={() => deleteActivity(activity.id)}
               color="red"
               floated="right"

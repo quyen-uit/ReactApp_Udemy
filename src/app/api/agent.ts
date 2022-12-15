@@ -1,6 +1,6 @@
 import { store } from './../stores/store';
 import { Activity, ActivityFormvalues } from './../models/Activity';
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
 import { User } from '../models/User';
 import { UserFormValues } from '../models/UserFormValues';
