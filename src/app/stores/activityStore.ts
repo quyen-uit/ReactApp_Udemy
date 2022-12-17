@@ -34,7 +34,9 @@ export default class ActivityStore {
             }, {} as { [key: string]: Activity[] })
         )
     }
-
+    private getActivity = (id: string) => {
+        return this.activityMap.get(id);
+    }
     loadActivities = async () => {
         this.setLoadingInitial(true);
 
@@ -64,7 +66,7 @@ export default class ActivityStore {
             try {
                 activity = await agent.Activities.details(id);
                 this.setActivity(activity);
-                runInAction( () => {
+                runInAction(() => {
                     this.selectedActivity = activity;
                 })
             } catch (err) {
@@ -120,8 +122,10 @@ export default class ActivityStore {
             await agent.Activities.update(activity).then(() => {
                 runInAction(() => {
                     if (activity.id) {
-                        this.activityMap.set(activity.id, activity as Activity);
-                        this.selectedActivity = activity as Activity;
+                        let updatedActivity = { ...this.getActivity(activity.id), ...activity };
+                        this.activityMap.set(activity.id, updatedActivity as Activity);
+                        this.selectedActivity = updatedActivity as Activity;
+
                     }
                 })
             });

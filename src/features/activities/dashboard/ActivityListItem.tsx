@@ -29,6 +29,8 @@ function ActivityListItem({ activity }: Props) {
             size="tiny"
             circular
             src={activity.host?.image}
+            as={Link}
+            to={`/profile/${activity.hostUserName}`}
           />
           <Item.Content style={{ marginLeft: "10px" }}>
             <Item.Header as={Link} to={`/activity/${activity.id}`}>

@@ -16,6 +16,11 @@ export default class UserStore {
         return !!this.user;
     }
 
+    setImage(image: string) {
+        if (this.user)
+            return this.user.image = image;
+    }
+
     login = async (creds: UserFormValues) => {
         try {
             const user = await agent.Account.login(creds);

@@ -12,7 +12,7 @@ interface Props {
 function ActivityAttendeeItemList({ attendees }: Props) {
    return (
     <List horizontal>
-      {attendees.map((attendee) => (
+      {attendees?.map((attendee) => (
         <Popup
           hoverable
           key={attendee.userName}
