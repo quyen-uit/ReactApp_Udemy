@@ -1,61 +1,118 @@
-import { observer } from 'mobx-react-lite'
-import React from 'react'
-import {Segment, Header, Comment, Form, Button} from 'semantic-ui-react'
+import { Field, FieldProps, Formik } from "formik";
+import { observer } from "mobx-react-lite";
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
+import {
+  Segment,
+  Header,
+  Comment,
+  Form,
+  Button,
+  Loader,
+} from "semantic-ui-react";
+import MyTextAreaInput from "../../../app/common/forms/MyTextAreaInput";
+import { useStore } from "../../../app/stores/store";
+import * as Yup from "yup";
+interface Props {
+  activityId: string;
+}
 
-export default observer(function ActivityDetailedChat() {
-    return (
-        <>
-            <Segment
-                textAlign='center'
-                attached='top'
-                inverted
-                color='teal'
-                style={{border: 'none'}}
-            >
-                <Header>Chat about this event</Header>
-            </Segment>
-            <Segment attached>
-                <Comment.Group>
-                    <Comment>
-                        <Comment.Avatar src='/assets/user.png'/>
-                        <Comment.Content>
-                            <Comment.Author as='a'>Matt</Comment.Author>
-                            <Comment.Metadata>
-                                <div>Today at 5:42PM</div>
-                            </Comment.Metadata>
-                            <Comment.Text>How artistic!</Comment.Text>
-                            <Comment.Actions>
-                                <Comment.Action>Reply</Comment.Action>
-                            </Comment.Actions>
-                        </Comment.Content>
-                    </Comment>
+export default observer(function ActivityDetailedChat({ activityId }: Props) {
+  const { commentStore } = useStore();
 
-                    <Comment>
-                        <Comment.Avatar src='/assets/user.png'/>
-                        <Comment.Content>
-                            <Comment.Author as='a'>Joe Henderson</Comment.Author>
-                            <Comment.Metadata>
-                                <div>5 days ago</div>
-                            </Comment.Metadata>
-                            <Comment.Text>Dude, this is awesome. Thanks so much</Comment.Text>
-                            <Comment.Actions>
-                                <Comment.Action>Reply</Comment.Action>
-                            </Comment.Actions>
-                        </Comment.Content>
-                    </Comment>
+  useEffect(() => {
+    if (activityId) {
+      console.log('asdfs')
+      commentStore.createHubConnection(activityId);
+    }
 
-                    <Form reply>
-                        <Form.TextArea/>
-                        <Button
-                            content='Add Reply'
-                            labelPosition='left'
-                            icon='edit'
-                            primary
-                        />
-                    </Form>
-                </Comment.Group>
-            </Segment>
-        </>
+    return () => {
+      commentStore.clearComments();
+    };
+  }, [commentStore, activityId]);
 
-    )
-})
+  return (
+    <>
+      <Segment
+        textAlign="center"
+        attached="top"
+        inverted
+        color="teal"
+        style={{ border: "none" }}
+      >
+        <Header>Chat about this event</Header>
+      </Segment>
+      <Segment attached clearing>
+        <Comment.Group>
+          {commentStore.comments.map((comment) => (
+            <Comment key={comment.id}>
+              <Comment.Avatar src={comment.image || "/assets/user.png"} />
+              <Comment.Content>
+                <Comment.Author as={Link} to={`/profiles/${comment.userName}`}>
+                  {comment.displayName}
+                </Comment.Author>
+                <Comment.Metadata>
+                  <div>{comment.createdAt}</div>
+                </Comment.Metadata>
+                <Comment.Text style={{ whiteSpace: "pre-wrap" }}>
+                  {comment.body}
+                </Comment.Text>
+                {/* <Comment.Actions>
+                  <Comment.Action>Reply</Comment.Action>
+                </Comment.Actions> */}
+              </Comment.Content>
+            </Comment>
+          ))}
+          <Formik
+            onSubmit={(values, { resetForm }) =>
+              commentStore.addComment(values).then(() => resetForm())
+            }
+            initialValues={{ body: "" }}
+            validationSchema={Yup.object({
+              body: Yup.string().required(),
+            })}
+          >
+            {({ isSubmitting, isValid, handleSubmit }) => (
+              <Form className="ui form">
+                {/* <MyTextAreaInput
+                  placeholder="add comment"
+                  name="body"
+                  rows={2}
+                />
+                <Button
+                  loading={isSubmitting}
+                  disabled={isSubmitting || !isValid}
+                  content="Add Reply"
+                  labelPosition="left"
+                  icon="edit"
+                  primary
+                  type="submit"
+                  floated="right"
+                /> */}
+                <Field name="body">
+                  {(props: FieldProps) => (
+                    <div style={{ position: "relative" }}>
+                      <Loader active={isSubmitting} />
+                      <textarea
+                        placeholder="enter comment (enter to submit)"
+                        rows={2}
+                        {...props.field}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && e.shiftKey) return;
+                          if (e.key === "Enter" && !e.shiftKey) {
+                            e.preventDefault();
+                            isValid && handleSubmit();
+                          }
+                        }}
+                      />
+                    </div>
+                  )}
+                </Field>
+              </Form>
+            )}
+          </Formik>
+        </Comment.Group>
+      </Segment>
+    </>
+  );
+});
