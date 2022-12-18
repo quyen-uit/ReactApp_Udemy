@@ -5,6 +5,7 @@ import { User } from "../models/User";
 import { UserFormValues } from "../models/UserFormValues";
 import { store } from './store';
 import { router } from '../router/Routes';
+import { ProfileUpdateFormValues } from '../models/ProfileUpdateFormValues';
 
 export default class UserStore {
     user: User | null = null;
@@ -59,5 +60,13 @@ export default class UserStore {
         } catch (err) {
             throw err;
         }
+    }
+
+    setDisplayName =  (displayname: string) => {
+        runInAction(() => {
+            if (this.user) {
+                this.user.displayName = displayname;
+            }
+        })
     }
 }

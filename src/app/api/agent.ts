@@ -6,6 +6,8 @@ import { toast } from 'react-toastify';
 import { User } from '../models/User';
 import { UserFormValues } from '../models/UserFormValues';
 import { router } from '../router/Routes';
+import { request } from 'http';
+import { ProfileUpdateFormValues } from '../models/ProfileUpdateFormValues';
 
 axios.defaults.baseURL = 'https://192.168.1.104:443/api';
 
@@ -91,8 +93,10 @@ const Profiles = {
         })
     },
     setMainPhoto: (id: string) => requests.put(`/photo/setMain/${id}`, {}),
-    deletePhoto: (id: string) => requests.delete(`/photo/${id}`)
+    deletePhoto: (id: string) => requests.delete(`/photo/${id}`),
+    updateProfile: (profile: ProfileUpdateFormValues) => requests.put(`/profile`, profile)
 }
+
 const agent = {
     Activities,
     Account,

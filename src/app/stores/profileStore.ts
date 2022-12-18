@@ -3,6 +3,7 @@ import { makeAutoObservable, runInAction } from 'mobx';
 import agent from '../api/agent';
 import { Profile } from "../models/Profile";
 import { store } from './store';
+import { ProfileUpdateFormValues } from '../models/ProfileUpdateFormValues';
 
 export default class ProfileStore {
     profile: Profile | null = null;
@@ -90,5 +91,20 @@ export default class ProfileStore {
             console.log(error);
             runInAction(() => this.uploading = false);
         }
+    }
+
+    updateProfile = async (profileForm: ProfileUpdateFormValues) => {
+        this.loadingProfile = false;
+        try {
+            await agent.Profiles.updateProfile(profileForm);
+            if (this.profile) {
+                let profileUpdate = {...this.profile, ...profileForm};
+                this.profile = profileUpdate as Profile;
+            }
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.loadingProfile = false);
+        }
+
     }
 }
