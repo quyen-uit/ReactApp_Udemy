@@ -193,4 +193,15 @@ export default class ActivityStore {
             runInAction(() => this.loadingInitial = false);
         }
     }
+
+    updateFollowing =  (username: string) => {
+        this.activityMap.forEach(activity => {
+            activity.attendees.forEach(attendee => {
+                if (attendee.userName === username) {
+                    attendee.following ? attendee.followersCount-- : attendee.followingsCount++;
+                    attendee.following = !attendee.following;
+                }
+            });
+        })
+    }
 }

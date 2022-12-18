@@ -94,7 +94,8 @@ const Profiles = {
     },
     setMainPhoto: (id: string) => requests.put(`/photo/setMain/${id}`, {}),
     deletePhoto: (id: string) => requests.delete(`/photo/${id}`),
-    updateProfile: (profile: ProfileUpdateFormValues) => requests.put(`/profile`, profile)
+    updateProfile: (profile: ProfileUpdateFormValues) => requests.put(`/profile`, profile),
+    updateFollowing: (username: string) => requests.post(`/follow/${username}`, {}),
 }
 
 const agent = {

@@ -9,6 +9,7 @@ export default class ProfileStore {
     profile: Profile | null = null;
     loadingProfile = false;
     uploading: boolean = false;
+    followings: Profile[] = [];
     constructor() {
         makeAutoObservable(this);
     }
@@ -98,7 +99,7 @@ export default class ProfileStore {
         try {
             await agent.Profiles.updateProfile(profileForm);
             if (this.profile) {
-                let profileUpdate = {...this.profile, ...profileForm};
+                let profileUpdate = { ...this.profile, ...profileForm };
                 this.profile = profileUpdate as Profile;
             }
         } catch (error) {
@@ -106,5 +107,29 @@ export default class ProfileStore {
             runInAction(() => this.loadingProfile = false);
         }
 
+    }
+
+    updateFollowing = async (username: string, following: boolean) => {
+        this.loadingProfile = false;
+        try {
+            await agent.Profiles.updateFollowing(username);
+            store.activityStore.updateFollowing(username);
+            runInAction(() => {
+                if (this.profile && this.profile.userName !== store.userStore.user?.userName) {
+                    this.profile.following ? this.profile.followersCount-- : this.profile.followingsCount++;
+                    this.profile.following = !this.profile.following;
+                }
+                this.followings.forEach(profile => {
+                    if (profile.userName === username) {
+                        profile.following ? profile.followersCount-- : profile.followingsCount++;
+                        profile.following = !profile.following;
+                    }
+                })
+                this.loadingProfile = false;
+            })
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.loadingProfile = false);
+        }
     }
 }

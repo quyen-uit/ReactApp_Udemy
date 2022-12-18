@@ -16,7 +16,7 @@ function ProfileCard({ profile }: Props) {
         <Card.Description>{truncate(profile.bio)}</Card.Description>
       </Card.Content>
       <Card.Content extra>
-        <Icon name="user" /> 20 followers
+        <Icon name="user" /> {profile.followersCount} followers
       </Card.Content>
     </Card>
   );
