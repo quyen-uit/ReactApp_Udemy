@@ -1,4 +1,3 @@
-import { Profile } from './../models/Profile';
 import ActivityStore from "./activityStore";
 import { createContext, useContext } from 'react';
 import CommonStore from "./commonStore";

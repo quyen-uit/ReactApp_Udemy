@@ -36,7 +36,7 @@ function NavBar() {
           <Dropdown.Menu>
             <Dropdown.Item
               as={Link}
-              to={`/profile/'${user?.userName}`}
+              to={`/profile/${user?.userName}`}
               text="My profile"
               icon="user"
             />

@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 import { User } from '../models/User';
 import { UserFormValues } from '../models/UserFormValues';
 import { router } from '../router/Routes';
-import { request } from 'http';
 import { ProfileUpdateFormValues } from '../models/ProfileUpdateFormValues';
 
 axios.defaults.baseURL = 'https://192.168.1.104:443/api';
@@ -96,6 +95,7 @@ const Profiles = {
     deletePhoto: (id: string) => requests.delete(`/photo/${id}`),
     updateProfile: (profile: ProfileUpdateFormValues) => requests.put(`/profile`, profile),
     updateFollowing: (username: string) => requests.post(`/follow/${username}`, {}),
+    listFollowings: (username: string, predicate: string) => requests.get<Profile[]>(`/follow/${username}?predicate=${predicate}`)
 }
 
 const agent = {

@@ -198,7 +198,7 @@ export default class ActivityStore {
         this.activityMap.forEach(activity => {
             activity.attendees.forEach(attendee => {
                 if (attendee.userName === username) {
-                    attendee.following ? attendee.followersCount-- : attendee.followingsCount++;
+                    attendee.following ? attendee.followersCount-- : attendee.followersCount++;
                     attendee.following = !attendee.following;
                 }
             });
