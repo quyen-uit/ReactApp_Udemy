@@ -5,6 +5,7 @@ import { Activity } from "../models/Activity"; import { format } from "date-fns"
 import { store } from "./store";
 import { Profile } from "../models/Profile";
 import { router } from '../router/Routes';
+import { Pagination, PagingParams } from '../models/Pagination';
 
 export default class ActivityStore {
     // activities: Activity[] = [];
@@ -14,6 +15,9 @@ export default class ActivityStore {
     editMode = false;
     loadingInitial = false;
     submitting = false;
+    pagination: Pagination | null = null;
+    pagingParams: PagingParams = new PagingParams();
+    predicates = new Map().set('all', true);
 
     constructor() {
         makeAutoObservable(this);
@@ -41,12 +45,13 @@ export default class ActivityStore {
         this.setLoadingInitial(true);
 
         try {
-            const activities = await agent.Activities.list();
+            const result = await agent.Activities.list(this.axiosParams);
             runInAction(() => {
-                activities.forEach((item) => {
+                result.data.forEach((item) => {
                     this.setActivity(item);
                     this.activityMap.set(item.id, item);
                 });
+                this.setPagination(result.pagination);
                 this.setLoadingInitial(false);
             })
         } catch (err) {
@@ -194,7 +199,7 @@ export default class ActivityStore {
         }
     }
 
-    updateFollowing =  (username: string) => {
+    updateFollowing = (username: string) => {
         this.activityMap.forEach(activity => {
             activity.attendees.forEach(attendee => {
                 if (attendee.userName === username) {
@@ -207,5 +212,22 @@ export default class ActivityStore {
 
     clearSelectedActivity = () => {
         this.selectedActivity = undefined;
+    }
+
+
+
+    setPagination = (pagination: Pagination) => {
+        this.pagination = pagination;
+    }
+
+    setPagingParams = (pagingParams: PagingParams) => {
+        this.pagingParams = pagingParams;
+    }
+
+    get axiosParams() {
+        const params = new URLSearchParams();
+        params.append('pageNumber', this.pagingParams.pageNumber.toString());
+        params.append('pageSize', this.pagingParams.pageSize.toString());
+        return params;
     }
 }
