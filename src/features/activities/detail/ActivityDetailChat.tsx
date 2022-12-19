@@ -2,6 +2,8 @@ import { Field, FieldProps, Formik } from "formik";
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { formatDistanceToNow } from 'date-fns';
+
 import {
   Segment,
   Header,
@@ -52,7 +54,7 @@ export default observer(function ActivityDetailedChat({ activityId }: Props) {
                   {comment.displayName}
                 </Comment.Author>
                 <Comment.Metadata>
-                  <div>{comment.createdAt}</div>
+                  <div>{formatDistanceToNow(comment.createdAt)}</div>
                 </Comment.Metadata>
                 <Comment.Text style={{ whiteSpace: "pre-wrap" }}>
                   {comment.body}

@@ -10,11 +10,13 @@ import ActivityDetailSidebar from "./ActivityDetailSidebar";
 
 function ActivityDetail() {
   const { activityStore } = useStore();
-  const { selectedActivity: activity, loadActivity } = activityStore;
+  const { selectedActivity: activity, loadActivity, clearSelectedActivity } = activityStore;
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
     if (id) loadActivity(id);
+    
+    return () => clearSelectedActivity();
   }, [id, loadActivity]);
   if (activity === undefined) return <div></div>;
   return (
