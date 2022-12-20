@@ -1,5 +1,5 @@
 import { ActivityFormvalues } from './../models/Activity';
-import { makeAutoObservable, runInAction } from "mobx";
+import { makeAutoObservable, reaction, runInAction } from "mobx";
 import agent from "../api/agent";
 import { Activity } from "../models/Activity"; import { format } from "date-fns";
 import { store } from "./store";
@@ -17,10 +17,18 @@ export default class ActivityStore {
     submitting = false;
     pagination: Pagination | null = null;
     pagingParams: PagingParams = new PagingParams();
-    predicates = new Map().set('all', true);
+    predicates = new Map().set('all', 'true');
 
     constructor() {
         makeAutoObservable(this);
+
+        reaction(
+            () => this.predicates.keys(),
+            () => {
+                this.pagingParams = new PagingParams();
+                this.activityMap.clear();
+                this.loadActivities();
+            })
     }
 
     get activitiesByDate() {
@@ -38,6 +46,21 @@ export default class ActivityStore {
             }, {} as { [key: string]: Activity[] })
         )
     }
+
+    get axiosParams() {
+        const params = new URLSearchParams();
+        params.append('pageNumber', this.pagingParams.pageNumber.toString());
+        params.append('pageSize', this.pagingParams.pageSize.toString());
+        this.predicates.forEach((value, key) => {
+            if (key === 'startDate') {
+                params.append(key, (value as Date).toUTCString())
+            } else {
+                params.append(key, value);
+            }
+        })
+        return params;
+    }
+
     private getActivity = (id: string) => {
         return this.activityMap.get(id);
     }
@@ -214,8 +237,6 @@ export default class ActivityStore {
         this.selectedActivity = undefined;
     }
 
-
-
     setPagination = (pagination: Pagination) => {
         this.pagination = pagination;
     }
@@ -224,10 +245,34 @@ export default class ActivityStore {
         this.pagingParams = pagingParams;
     }
 
-    get axiosParams() {
-        const params = new URLSearchParams();
-        params.append('pageNumber', this.pagingParams.pageNumber.toString());
-        params.append('pageSize', this.pagingParams.pageSize.toString());
-        return params;
+    setPredicate = (predicate: string, value: string | Date) => {
+        const resetPredicate = () => {
+            this.predicates.forEach((value, key) => {
+                if (key !== 'startDate') {
+                    this.predicates.delete(key);
+                }
+            })
+        }
+        switch (predicate) {
+            case 'all':
+                resetPredicate();
+                this.predicates.set('all', true);
+                break;
+            case 'isGoing':
+                resetPredicate();
+                this.predicates.set('isGoing', true);
+                break;
+            case 'isHost':
+                resetPredicate();
+                this.predicates.set('isHost', true);
+                break;
+            case 'startDate':
+                resetPredicate();
+                this.predicates.delete('startDate');
+                this.predicates.set('startDate', value);
+
+                break;
+        }
     }
+
 }
