@@ -6,6 +6,7 @@ import { useStore } from "../stores/store";
 import { useEffect } from "react";
 import LoadingComponent from "./LoadingComponent";
 import ModalContainer from "../common/modals/ModalContainer";
+import { ScrollRestoration } from "react-router-dom";
 function App() {
   const { commonStore, userStore } = useStore();
 
@@ -22,6 +23,7 @@ function App() {
 
   return (
     <div className="App">
+      <ScrollRestoration />
       <ToastContainer hideProgressBar position="top-right" />
       <ModalContainer />
       <Layout />

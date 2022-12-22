@@ -11,24 +11,30 @@ import ProfileEditForm from "../../features/profiles/form/ProfileEditForm";
 import ProfilePage from "../../features/profiles/ProfilePage";
 import LoginForm from "../../features/users/LoginForm";
 import App from "../layout/App";
+import RequireAuth from "./RequireAuth";
 
 export const routes: RouteObject[] = [
   {
     path: "/",
     element: <App />,
     children: [
-      { path: "", element: <HomePage /> },
-      { path: "activities", element: <ActivityDashboard /> },
-      { path: "createActivity", element: <ActivityForm key="create" /> },
-      { path: "manage/:id", element: <ActivityForm key="manage" /> },
-      { path: "activity/:id", element: <ActivityDetail /> },
-      { path: "errors", element: <TestErrors /> },
+      {
+        element: <RequireAuth />,
+        children: [
+          { path: "", element: <HomePage /> },
+          { path: "activities", element: <ActivityDashboard /> },
+          { path: "createActivity", element: <ActivityForm key="create" /> },
+          { path: "manage/:id", element: <ActivityForm key="manage" /> },
+          { path: "activity/:id", element: <ActivityDetail /> },
+          { path: "errors", element: <TestErrors /> },
+          { path: "login", element: <LoginForm /> },
+          { path: "profile/:username", element: <ProfilePage /> },
+          { path: "editprofile", element: <ProfileEditForm /> },
+        ],
+      },
+      { path: "server-error", element: <ServerError /> },
       { path: "notfound", element: <NotFound /> },
       { path: "*", element: <Navigate replace to="/notfound" /> },
-      { path: "login", element: <LoginForm /> },
-      { path: "server-error", element: <ServerError /> },
-      { path: "profile/:username", element: <ProfilePage /> },
-      { path: "editprofile", element: <ProfileEditForm /> },
     ],
   },
 ];

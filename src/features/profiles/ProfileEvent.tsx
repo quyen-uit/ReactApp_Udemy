@@ -1,16 +1,11 @@
 import { observer } from "mobx-react-lite";
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import  { useEffect } from "react";
 import {
-  Button,
   Card,
   Menu,
   Tab,
   Image,
-  Icon,
   Grid,
-  List,
-  Item,
   Header,
 } from "semantic-ui-react";
 import { useStore } from "../../app/stores/store";
@@ -27,7 +22,7 @@ function ProfileEvent({ userName }: Props) {
 
   useEffect(() => {
     setActiveEventTab("infuture");
-  }, []);
+  }, [setActiveEventTab]);
   return (
     <Tab.Pane>
       <Header  icon="user" content={"Profile Event"} />
