@@ -1,3 +1,4 @@
+import { Activity } from './../models/Activity';
 import { Photo } from './../models/Profile';
 import { makeAutoObservable, runInAction, reaction } from 'mobx';
 import agent from '../api/agent';
@@ -14,6 +15,10 @@ export default class ProfileStore {
     loadingBtnFollow: boolean = false;
     activeTab: number = 0;
 
+    // event
+    events = new Map<string, Activity>();
+    loadingEvent: boolean = false;
+    activeEventTab: string = 'infuture';
 
     constructor() {
         makeAutoObservable(this);
@@ -27,6 +32,13 @@ export default class ProfileStore {
                 } else {
                     this.followings = [];
                 }
+            }
+        )
+
+        reaction(
+            () => this.activeEventTab,
+            activeEventTab => {
+                this.loadEvents(activeEventTab);
             }
         )
     }
@@ -170,5 +182,27 @@ export default class ProfileStore {
     setActiveTab = (activeTab: any) => {
         runInAction(() => this.activeTab = activeTab);
     }
+
+    setActiveEventTab = (activeTab: any) => {
+        runInAction(() => this.activeEventTab = activeTab);
+    }
+
+    loadEvents = async (predicate: string) => {
+        this.loadingEvent = true;
+        try {
+            let response = await agent.Profiles.getEvents(this.profile!.userName, predicate);
+            runInAction(() => {
+                this.events.clear();
+                response.map((event) => runInAction(() => {
+                    event.date = new Date(event.date!)
+                    this.events.set(event.id, event);
+                    this.loadingEvent = false;
+                }))
+            })
+        } catch (error) {
+            runInAction(() => this.loadingEvent = false);
+        }
+    }
+
 }
 

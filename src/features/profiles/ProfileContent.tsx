@@ -3,6 +3,7 @@ import { Tab } from "semantic-ui-react";
 import { Profile } from "../../app/models/Profile";
 import { useStore } from "../../app/stores/store";
 import ProfileAbout from "./ProfileAbout";
+import ProfileEvent from "./ProfileEvent";
 import ProfileFollowings from "./ProfileFollowings";
 import ProfilePhotos from "./ProfilePhotos";
 
@@ -19,7 +20,7 @@ function ProfilePage({ profile }: Props) {
       render: () => <ProfileAbout bio={profile.bio || ""} />,
     },
     { menuItem: "Photos", render: () => <ProfilePhotos profile={profile} /> },
-    { menuItem: "Events", render: () => <Tab.Pane>Events Content</Tab.Pane> },
+    { menuItem: "Events", render: () => <ProfileEvent userName={profile.userName} /> },
     {
       menuItem: "Followers",
       render: () => <ProfileFollowings />,

@@ -13,6 +13,7 @@ export interface Activity {
   isHost: boolean;
   host?: Profile;
   attendees: Profile[];
+  image?: string;
 }
 
 export class Activity implements Activity {
