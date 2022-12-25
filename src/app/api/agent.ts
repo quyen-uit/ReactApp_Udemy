@@ -9,7 +9,7 @@ import { router } from '../router/Routes';
 import { ProfileUpdateFormValues } from '../models/ProfileUpdateFormValues';
 import { PaginatedResult } from '../models/Pagination';
 
-axios.defaults.baseURL = 'https://192.168.1.104:443/api';
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
 axios.interceptors.request.use(config => {
     const token = store.commonStore.token;
