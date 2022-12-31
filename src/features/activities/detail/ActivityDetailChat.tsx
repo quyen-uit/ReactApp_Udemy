@@ -1,6 +1,6 @@
 import { Field, FieldProps, Formik } from "formik";
 import { observer } from "mobx-react-lite";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { formatDistanceToNow } from 'date-fns';
 
@@ -9,10 +9,8 @@ import {
   Header,
   Comment,
   Form,
-  Button,
   Loader,
 } from "semantic-ui-react";
-import MyTextAreaInput from "../../../app/common/forms/MyTextAreaInput";
 import { useStore } from "../../../app/stores/store";
 import * as Yup from "yup";
 interface Props {
@@ -24,7 +22,6 @@ export default observer(function ActivityDetailedChat({ activityId }: Props) {
 
   useEffect(() => {
     if (activityId) {
-      console.log('asdfs')
       commentStore.createHubConnection(activityId);
     }
 
