@@ -1,61 +1,38 @@
-import React, { SyntheticEvent, useState } from "react";
-import { Button, Item, Label, Segment } from "semantic-ui-react";
-import { Activity } from "../../../app/models/Activity";
+import { observer } from "mobx-react-lite";
+import { Fragment, useEffect } from "react";
+import { Header, Item, Segment } from "semantic-ui-react";
+import { useStore } from "../../../app/stores/store";
+import ActivityListItem from "./ActivityListItem";
 
-interface Props {
-  activities: Activity[];
-  selectActivity: (id: string) => void;
-  deleteActivity: (id: string) => void;
-  submitting: boolean;
-}
+function ActivityList() {
+  const { activityStore } = useStore();
+  const {
+     activityMap,
+    groupedActivities,
+  } = activityStore;
 
-export default function ActivityList({
-  submitting,
-  activities,
-  selectActivity,
-  deleteActivity,
-}: Props) {
-  const [target, setTarget] = useState("");
+  useEffect(() => {
+    if (activityMap.size === 0) activityStore.loadActivities();
+  }, [activityMap.size, activityStore]);
 
-  function handleActivityDelete(e: SyntheticEvent<HTMLButtonElement>, id: string) {
-    setTarget(e.currentTarget.name);
-    deleteActivity(id);
-  }
   return (
-    <Segment>
-      <Item.Group divided>
-        {activities.map((activity) => (
-          <Item key={activity.id} style={{ textAlign: "left" }}>
-            <Item.Content>
-              <Item.Header as="a">{activity.title}</Item.Header>
-              <Item.Meta>{activity.date}</Item.Meta>
-              <Item.Description>
-                <div>{activity.description}</div>
-                <div>
-                  {activity.city}, {activity.venue}
-                </div>
-              </Item.Description>
-              <Item.Extra>
-                <Button
-                  onClick={() => selectActivity(activity.id)}
-                  floated="right"
-                  content="View"
-                  color="blue"
-                />
-                <Button
-                  name={activity.id}
-                  onClick={(e) => handleActivityDelete(e, activity.id)}
-                  floated="right"
-                  content="Delete"
-                  color="red"
-                  loading={submitting && target === activity.id}
-                />
-                <Label basic content={activity.category} />
-              </Item.Extra>
-            </Item.Content>
-          </Item>
-        ))}
-      </Item.Group>
-    </Segment>
+    <>
+      {groupedActivities.map(([group, activities]) => (
+        <Fragment key={group}>
+          <Header sub color="teal">
+            {group}
+          </Header>
+          <Segment>
+            <Item.Group divided>
+              {activities.map((activity) => (
+                <ActivityListItem key={activity.id} activity={activity} />
+              ))}
+            </Item.Group>
+          </Segment>
+        </Fragment>
+      ))}
+    </>
   );
 }
+
+export default observer(ActivityList);

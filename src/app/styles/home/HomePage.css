@@ -1,0 +1,8 @@
+.box {
+  display: flex;
+  justify-content: center ; 
+  align-items: center;
+  background-color: #8fbc8f;
+  width: 100% !important;
+  height: 100% ;
+}
