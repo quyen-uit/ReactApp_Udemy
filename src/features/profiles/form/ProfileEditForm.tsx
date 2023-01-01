@@ -3,8 +3,6 @@ import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Form, Header, Segment } from "semantic-ui-react";
-import MyDateInput from "../../../app/common/forms/MyDateInput";
-import MySelectInput from "../../../app/common/forms/MySelectInput";
 import MyTextAreaInput from "../../../app/common/forms/MyTextAreaInput";
 import MyTextInput from "../../../app/common/forms/MyTextInput";
 import { ProfileUpdateFormValues } from "../../../app/models/ProfileUpdateFormValues";

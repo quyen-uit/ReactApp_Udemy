@@ -1,11 +1,11 @@
 import { observer } from "mobx-react-lite";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Button, FormField, Header, Label, Segment } from "semantic-ui-react";
+import { Button, Header, Segment } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import { v4 as uuid } from "uuid";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { Activity, ActivityFormvalues } from "../../../app/models/Activity";
+import { Formik, Form } from "formik";
+import { ActivityFormvalues } from "../../../app/models/Activity";
 import * as Yup from "yup";
 import MyTextInput from "../../../app/common/forms/MyTextInput";
 import MyTextAreaInput from "../../../app/common/forms/MyTextAreaInput";
@@ -17,8 +17,7 @@ function ActivityForm() {
     new ActivityFormvalues()
   );
   const { activityStore } = useStore();
-  const { createActivity, editActivity, submitting, loadActivity } =
-    activityStore;
+  const { createActivity, editActivity, loadActivity } = activityStore;
 
   const validationSchema = Yup.object({
     title: Yup.string().required("Title required"),

@@ -1,10 +1,9 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import "./app/styles/styles.css";
 import reportWebVitals from "./reportWebVitals";
 import "semantic-ui-css/semantic.min.css";
 import { store, StoreContext } from "./app/stores/store";
-import { RouterProvider, unstable_HistoryRouter as HistoryRouter   } from "react-router-dom";
+import { RouterProvider } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 // import { createBrowserHistory } from "history";
 import { router } from "./app/router/Routes";

@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
-import { Button, Card, Grid, Image } from "semantic-ui-react";
+import { useParams } from "react-router-dom";
+import { Grid } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import ActivityDetailChat from "./ActivityDetailChat";
 import ActivityDetailHeader from "./ActivityDetailHeader";
@@ -17,7 +17,7 @@ function ActivityDetail() {
     if (id) loadActivity(id);
     
     return () => clearSelectedActivity();
-  }, [id, loadActivity]);
+  }, [id, loadActivity,clearSelectedActivity]);
   if (activity === undefined) return <div></div>;
   return (
     <Grid>

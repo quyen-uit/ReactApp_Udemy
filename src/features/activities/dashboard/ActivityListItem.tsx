@@ -1,18 +1,17 @@
 import { format } from "date-fns";
 import { observer } from "mobx-react-lite";
-import React, { SyntheticEvent, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Icon, Item, Label, Segment } from "semantic-ui-react";
 import { Activity } from "../../../app/models/Activity";
-import { useStore } from "../../../app/stores/store";
 import ActivityAttendeeItemList from "./ActivityAttendeeItemList";
 interface Props {
   activity: Activity;
 }
 function ActivityListItem({ activity }: Props) {
-  const { activityStore } = useStore();
-  const { deleteActivity, submitting, loadActivity } = activityStore;
-  const [target, setTarget] = useState("");
+  // const { activityStore } = useStore();
+  // const { deleteActivity, submitting, loadActivity } = activityStore;
+  // const [target, setTarget] = useState("");
   return (
     <Segment.Group>
       <Segment>
