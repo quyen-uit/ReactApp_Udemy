@@ -1,6 +1,6 @@
 # Getting Started with Create React App
 
-Using .NET Core to develop Web API study from Udemy Course
+Create APP with React JS from Udemy Course
 
 ## Available Scripts
 
