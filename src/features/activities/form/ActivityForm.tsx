@@ -61,7 +61,7 @@ function ActivityForm() {
       >
         {({ handleSubmit, isValid, isSubmitting, dirty }) => (
           <Form className="ui form" onSubmit={handleSubmit}>
-            <MyTextInput name="title" placeholder="title" />
+            <MyTextInput name="title" placeholder="Title" />
             <MyTextAreaInput
               rows={3}
               placeholder="Description"
@@ -76,7 +76,7 @@ function ActivityForm() {
               showTimeSelect
               timeCaption="time"
               dateFormat={"MMMM d, yyyy h:mm aa"}
-              name="date"
+              name="Date"
             />
             <Header content="Location Details" sub color="teal" />
             <MyTextInput placeholder="City " name="city" />

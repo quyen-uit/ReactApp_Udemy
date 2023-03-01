@@ -32,7 +32,7 @@ function HomePage() {
               Register
             </Button>
           </div>
-          <Divider horizontal inverted>
+          {/* <Divider horizontal inverted>
             Or
           </Divider>
           <Button
@@ -49,7 +49,7 @@ function HomePage() {
             onFail={(error: any) => {
               console.log("Login Failed!", error);
             }}
-          />
+          /> */}
         </div>
       )}
     </div>

@@ -24,9 +24,9 @@ function NavBar() {
       <Menu.Item name="activities" as={NavLink} to="/activities">
         Activities
       </Menu.Item>
-      <Menu.Item name="erros" as={NavLink} to="/errors">
+      {/* <Menu.Item name="erros" as={NavLink} to="/errors">
         Test Errors
-      </Menu.Item>
+      </Menu.Item> */}
       <Menu.Item name="createActivity" as={Link} to="/createActivity">
         <Button content="Create Activity"></Button>
       </Menu.Item>

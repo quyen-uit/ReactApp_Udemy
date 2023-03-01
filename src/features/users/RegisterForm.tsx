@@ -34,7 +34,7 @@ function RegisterForm() {
         <Form className="ui form error" onSubmit={handleSubmit} autoComplete="off">
           <Header content="Register" />
           <MyTextInput name="username" placeholder="Username" />
-          <MyTextInput name="displayName" placeholder="Display ame" />
+          <MyTextInput name="displayName" placeholder="Display Name" />
           <MyTextInput name="email" placeholder="Email" />
           <MyTextInput name="password" placeholder="Password" type="password" />
           <ErrorMessage
@@ -45,7 +45,7 @@ function RegisterForm() {
             disabled={!isValid || !dirty || isSubmitting}
             loading={isSubmitting}
             positive
-            content="REgister"
+            content="Register"
             type="submit"
             fluid
           />
