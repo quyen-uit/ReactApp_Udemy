@@ -9,7 +9,6 @@ export default function MyDateInput(props: Partial<ReactDatePickerProps>) {
 
   return (
     <Form.Field error={meta.touched && !!meta.error}>
-      <label>{props.name}</label>
       <DatePicker
         {...field}
         {...props}

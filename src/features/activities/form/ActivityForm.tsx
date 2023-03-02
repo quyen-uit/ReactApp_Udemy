@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Button, Header, Segment } from "semantic-ui-react";
+import { Button, FormField, Header, Segment } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import { v4 as uuid } from "uuid";
 import { Formik, Form } from "formik";
@@ -72,11 +72,14 @@ function ActivityForm() {
               placeholder="Category"
               name="category"
             />
+            <FormField style={{ marginBottom: -2}}>
+              <label>Date</label>
+            </FormField>
             <MyDateInput
               showTimeSelect
               timeCaption="time"
               dateFormat={"MMMM d, yyyy h:mm aa"}
-              name="Date"
+              name="date"
             />
             <Header content="Location Details" sub color="teal" />
             <MyTextInput placeholder="City " name="city" />
